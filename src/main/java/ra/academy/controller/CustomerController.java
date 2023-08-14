@@ -44,6 +44,16 @@ public class CustomerController extends HttpServlet {
                     request.setAttribute("customer",customerService.findById(id));
                     request.getRequestDispatcher("/WEB-INF/views/detail.jsp").forward(request,response);
                     break;
+                case "EDIT":
+                    Long idEdit =Long.valueOf(request.getParameter("id"));
+                    request.setAttribute("customer",customerService.findById(idEdit));
+                    request.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(request,response);
+                    break;
+                case "DELETE":
+                    Long idDel =Long.valueOf(request.getParameter("id"));
+                    customerService.delete(idDel);
+                    response.sendRedirect("/");
+                    break;
             }
         }
     }
@@ -83,9 +93,40 @@ public class CustomerController extends HttpServlet {
                     customer.setImages(images);
                     customerService.save(customer);
 
-                    response.sendRedirect("/");
+
+                    break;
+                case "UPDATE":
+                    Long id = Long.valueOf(request.getParameter("id"));
+                    String fullNameUpdate = request.getParameter("fullName");
+                    int ageUpdate = Integer.parseInt(request.getParameter("age"));
+                    boolean sexUpdate = Boolean.parseBoolean(request.getParameter("sex"));
+                    Collection<Part> partsUpdate = request.getParts();
+                    String avatarUpdate = null;
+                    List<String> imagesUpdate = new ArrayList<>();
+                    // upload file vào thư mục image của webapp
+
+                    String uploadPathUpdate  = "C:\\Users\\hung1\\Downloads\\CustomerManager\\src\\main\\webapp\\image";
+                    for (Part part: partsUpdate
+                    ) {
+                        if (part.getName().equals("avatar")){
+                            avatar = part.getSubmittedFileName();
+                            part.write(uploadPathUpdate+ File.separator+part.getSubmittedFileName());
+                        }else if (part.getName().equals("image")){
+                            imagesUpdate.add(part.getSubmittedFileName());
+                            part.write(uploadPathUpdate+ File.separator+part.getSubmittedFileName());
+                        }
+
+                    }
+                    // C:\Users\hung1\Downloads\CustomerManager\src\main\webapp\image\3219840.png;
+
+                    // tạo mới
+                    Customer customerUpdate  =new Customer(id,fullNameUpdate,ageUpdate,sexUpdate,avatarUpdate);
+                    customerUpdate.setImages(imagesUpdate);
+                    customerService.save(customerUpdate);
+
                     break;
             }
+            response.sendRedirect("/");
         }
     }
 }

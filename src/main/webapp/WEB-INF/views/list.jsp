@@ -32,10 +32,10 @@
       <td>${loop.count}</td>
       <td>${c.fullName}</td>
       <td>${c.age}</td>
-      <td><a href="/CustomerController?id=${c.id}&action=DETAIL"><img width=100px" style="object-fit: cover" height="100px" src="<%=request.getContextPath()%>/image/${c.avatar}" alt="#"></a></td>
+      <td><a href="/CustomerController?id=${c.id}&action=DETAIL"><img width=100px" style="object-fit: cover" height="100px" src="/image/${c.avatar}" alt="#"></a></td>
       <td>${c.sex}</td>
-      <td>EDIT</td>
-      <td>DELETE</td>
+      <td><a href="/CustomerController?action=EDIT&id=${c.id}">EDIT</a></td>
+      <td><a href="/CustomerController?action=DELETE&id=${c.id}">DELETE</a></td>
     </tr>
   </c:forEach>
   </tbody>
